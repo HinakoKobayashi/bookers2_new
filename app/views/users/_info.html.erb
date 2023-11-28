@@ -1,11 +1,6 @@
-<div class="container">
-  <div class="row">
-    <div class="col-md-3">
-
-      <%= image_tag user.get_profile_image(100,100) %>
-      
-      <table class="table">
+     <table class="table">
         <tbody>
+          <tr><%= image_tag user.get_profile_image(100,100) %></tr>
           <tr>
             <th>name</th>
             <th><%= user.name %></th>
@@ -14,9 +9,28 @@
             <th>introduction</th>
             <th><%= user.introduction %></th>
           </tr>
+          <tr>
+            <th>follows</th>
+            <th><%= link_to user.followings.count, user_followings_path(user) %></th>
+          </tr>
+          <tr>
+            <th>followers</th>
+            <th><%= link_to user.followers.count, user_followers_path(user) %></th>
+          </tr>
         </tbody>
       </table>
 
-    </div>
-  </div>
+<div class="row">
+  <% if current_user != user %>
+     <td><%= render "relationships/btn", user: user %></td>
+  <% else %>
+    <%= link_to edit_user_path(user), class: "btn btn-outline-secondary btn-block" do %>
+     <i class="fa-solid fa-user-gear" style="color: #76797f;"></i>
+     <% end %>
+  <% end %>
+
+  <% if current_user != user && current_user.following?(user) && user.following?(current_user) %>
+    <td><%= link_to 'chatを始める', chat_path(user.id), class: "ml-3" %></td>
+  <% end %>
+
 </div>
